@@ -9,6 +9,9 @@ public class Categoria extends AbstractEntity{
 	
 	@Column(length = 100)
 	private String nome;
+	
+	public Categoria() {
+	}
 
 	public Categoria(Long id, String nome) {
 		super();
