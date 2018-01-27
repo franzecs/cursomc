@@ -1,13 +1,18 @@
 package com.ikytus.mc.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+@Entity
 public class Categoria extends AbstractEntity{
 	private static final long serialVersionUID = 1L;
 	
+	@Column(length = 100)
 	private String nome;
 
-	public Categoria(Long codigo, String nome) {
+	public Categoria(Long id, String nome) {
 		super();
-	    super.setCodigo(codigo);
+	    super.setId(id);
 		this.nome = nome;
 	}
 
