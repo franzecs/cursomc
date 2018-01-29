@@ -1,7 +1,10 @@
 package com.ikytus.mc.domain;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Categoria extends AbstractEntity{
@@ -9,6 +12,9 @@ public class Categoria extends AbstractEntity{
 	
 	@Column(length = 100)
 	private String nome;
+	
+	@ManyToMany(mappedBy="categorias")
+	private List<Produto> produtos;
 	
 	public Categoria() {
 	}
@@ -25,5 +31,13 @@ public class Categoria extends AbstractEntity{
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public List<Produto> getProdutos() {
+		return produtos;
+	}
+
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
 	}
 }
