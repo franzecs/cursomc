@@ -26,6 +26,15 @@ public class AbstractEntity implements Serializable {
 	@Lob
 	private String img;
 		
+	public AbstractEntity() {
+	}
+	
+	public AbstractEntity(String nomeimg, String img) {
+		super();
+		this.nomeimg = nomeimg;
+		this.img = img;
+	}
+
 	public Long getId() {
 		return id;
 	}

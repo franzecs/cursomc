@@ -16,6 +16,15 @@ public class Estado extends AbstractEntity{
 
 	public Estado() {
 	}
+	
+	
+
+	public Estado(String nome) {
+		super();
+		this.nome = nome;
+	}
+
+
 
 	public String getNome() {
 		return nome;

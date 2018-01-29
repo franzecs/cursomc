@@ -16,6 +16,14 @@ public class Cidade extends AbstractEntity{
 	
 	public Cidade() {
 	}
+	
+	public Cidade(String nome, Estado estado) {
+		super();
+		this.nome = nome;
+		this.estado = estado;
+	}
+
+
 
 	public String getNome() {
 		return nome;
