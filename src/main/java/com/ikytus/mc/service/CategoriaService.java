@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.ikytus.mc.domain.Categoria;
 import com.ikytus.mc.repository.CategoriaRepository;
+import com.ikytus.mc.service.exceptions.ObjectNotFoundException;
 
 @Service
 public class CategoriaService {
@@ -13,6 +14,13 @@ public class CategoriaService {
 	private CategoriaRepository categoriaRepository;
 	
 	public Categoria buscar(Long id) {
-		return categoriaRepository.findOne(id); 
+		
+		Categoria categoria = categoriaRepository.findOne(id); 
+		
+		if(categoria == null) {
+			throw new ObjectNotFoundException("Objeto não encontrado! Id: " + id
+					+ ", Tipo: " + Categoria.class.getName());
+		}
+		return categoria; 
 	}
 }
