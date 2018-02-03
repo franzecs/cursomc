@@ -12,16 +12,21 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Pedido extends AbstractEntity{
 	private static final long serialVersionUID = 1L;
 	
-	@Column
+	@JsonFormat(pattern="dd/MM/yyy hh:mm")
 	private Date instante;
 	
+	@JsonManagedReference
 	@OneToOne(cascade=CascadeType.ALL, mappedBy="pedido")
 	private Pagamento pagamento;
 	
+	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name="cliente")
 	private Cliente cliente;
