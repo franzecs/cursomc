@@ -7,16 +7,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity
 public class Categoria extends AbstractEntity{
 	private static final long serialVersionUID = 1L;
 	
 	@Column(length = 100)
 	private String nome;
-	
-	@JsonManagedReference
+		
 	@ManyToMany(mappedBy="categorias")
 	private List<Produto> produtos = new ArrayList<>();
 	
