@@ -13,6 +13,7 @@ import com.ikytus.mc.domain.Cidade;
 import com.ikytus.mc.domain.Cliente;
 import com.ikytus.mc.domain.Endereco;
 import com.ikytus.mc.domain.Estado;
+import com.ikytus.mc.domain.ItemPedido;
 import com.ikytus.mc.domain.Pagamento;
 import com.ikytus.mc.domain.PagamentoComBoleto;
 import com.ikytus.mc.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import com.ikytus.mc.repository.CidadeRepository;
 import com.ikytus.mc.repository.ClienteRepository;
 import com.ikytus.mc.repository.EnderecoRepository;
 import com.ikytus.mc.repository.EstadoRepository;
+import com.ikytus.mc.repository.ItemPedidoRepository;
 import com.ikytus.mc.repository.PagamentoRepository;
 import com.ikytus.mc.repository.PedidoRepository;
 import com.ikytus.mc.repository.ProdutoRepository;
@@ -55,6 +57,9 @@ public class CursomcApplication implements CommandLineRunner {
 	
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository ItemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -121,6 +126,18 @@ public class CursomcApplication implements CommandLineRunner {
 		pedidoRepository.save(Arrays.asList(ped1,ped2));
 		pagamentoRepository.save(Arrays.asList(pagton1,pagton2));
 		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1,ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
+		ItemPedidoRepository.save(Arrays.asList(ip1,ip2,ip3));
 	}
 	
 	

@@ -1,12 +1,15 @@
 package com.ikytus.mc.domain;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -26,6 +29,9 @@ public class Pedido extends AbstractEntity{
 	@ManyToOne
 	@JoinColumn(name="enderecoDeEntrega")
 	private Endereco enderecoDeEntrega;
+	
+	@OneToMany(mappedBy="id.pedido")
+	private Set<ItemPedido> itens = new HashSet<>();
 			
 	public Pedido() {
 	}
@@ -68,5 +74,13 @@ public class Pedido extends AbstractEntity{
 
 	public void setEnderecoDeEntrega(Endereco enderecoDeEntrega) {
 		this.enderecoDeEntrega = enderecoDeEntrega;
+	}
+
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
 	}
 }
