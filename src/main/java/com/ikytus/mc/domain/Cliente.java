@@ -1,5 +1,7 @@
 package com.ikytus.mc.domain;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,17 +22,18 @@ public class Cliente extends AbstractEntity{
 	private Integer tipo;
 	
 	@OneToMany(mappedBy = "cliente")
-	private List<Endereco> enderecos;
+	private List<Endereco> enderecos = new ArrayList<>();
 	
 	@ElementCollection
 	@CollectionTable(name="telefone")
-	private Set<String> telefones;
+	private Set<String> telefones = new HashSet<>();
 
 	public Cliente() {
 	}
 
-	public Cliente(String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
+	public Cliente(Long id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
 		super();
+		super.setId(id);
 		this.nome = nome;
 		this.email = email;
 		this.cpfOuCnpj = cpfOuCnpj;

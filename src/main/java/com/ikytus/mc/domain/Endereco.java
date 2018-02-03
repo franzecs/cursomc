@@ -25,8 +25,9 @@ public class Endereco extends AbstractEntity{
 	public Endereco() {
 	}
 
-	public Endereco(String logradouro, String numero, String complemento, String bairro, String cep, Cliente cliente, Cidade cidade) {
+	public Endereco(Long id, String logradouro, String numero, String complemento, String bairro, String cep, Cliente cliente, Cidade cidade) {
 		super();
+		super.setId(id);
 		this.logradouro = logradouro;
 		this.numero = numero;
 		this.complemento = complemento;

@@ -1,5 +1,6 @@
 package com.ikytus.mc.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -12,15 +13,14 @@ public class Estado extends AbstractEntity{
 	private String nome;
 	
 	@OneToMany(mappedBy="estado")
-	private List<Cidade> cidades;
+	private List<Cidade> cidades = new ArrayList<>();
 
 	public Estado() {
 	}
 	
-	
-
-	public Estado(String nome) {
+	public Estado(Long id, String nome) {
 		super();
+		super.setId(id);
 		this.nome = nome;
 	}
 

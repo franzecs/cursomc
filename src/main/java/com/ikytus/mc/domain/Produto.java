@@ -1,5 +1,6 @@
 package com.ikytus.mc.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -23,7 +24,17 @@ public class Produto extends AbstractEntity{
 		joinColumns = @JoinColumn(name = "produto_id"),
 		inverseJoinColumns = @JoinColumn(name = "categoria_id")
 	)
-	private List<Categoria> categorias;
+	private List<Categoria> categorias = new ArrayList<>(); 
+	
+	public Produto() {
+	}
+
+	public Produto(Long id, String nome, Double preco) {
+		super();
+		super.setId(id);
+		this.nome = nome;
+		this.preco = preco;
+	}
 
 	public String getNome() {
 		return nome;

@@ -17,8 +17,9 @@ public class Cidade extends AbstractEntity{
 	public Cidade() {
 	}
 	
-	public Cidade(String nome, Estado estado) {
+	public Cidade(Long id, String nome, Estado estado) {
 		super();
+		super.setId(id);
 		this.nome = nome;
 		this.estado = estado;
 	}

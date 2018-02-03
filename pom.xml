@@ -42,6 +42,13 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		
+		<!-- Bando de Dados H2 - testes -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		
 		<!-- DevTools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

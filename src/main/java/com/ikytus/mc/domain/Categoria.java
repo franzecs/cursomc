@@ -1,5 +1,6 @@
 package com.ikytus.mc.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -17,7 +18,7 @@ public class Categoria extends AbstractEntity{
 	
 	@JsonManagedReference
 	@ManyToMany(mappedBy="categorias")
-	private List<Produto> produtos;
+	private List<Produto> produtos = new ArrayList<>();
 	
 	public Categoria() {
 	}
