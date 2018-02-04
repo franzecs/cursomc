@@ -1,10 +1,12 @@
 package com.ikytus.mc.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.ikytus.mc.domain.Categoria;
 import com.ikytus.mc.repository.CategoriaRepository;
+import com.ikytus.mc.service.exceptions.DataIntegrityException;
 import com.ikytus.mc.service.exceptions.ObjectNotFoundException;
 
 @Service
@@ -32,5 +34,15 @@ public class CategoriaService {
 	public Categoria update(Categoria categoria) {
 		find(categoria.getId());
 		return categoriaRepository.save(categoria);
+	}
+	
+	public void delete (Long id) {
+		find(id);
+		try {
+			categoriaRepository.delete(id);
+		}catch(DataIntegrityViolationException e) {
+			throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos ");
+		}
+		
 	}
 }
