@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.ikytus.mc.domain.Categoria;
+import com.ikytus.mc.dto.CategoriaDTO;
 import com.ikytus.mc.repository.CategoriaRepository;
 import com.ikytus.mc.service.exceptions.DataIntegrityException;
 import com.ikytus.mc.service.exceptions.ObjectNotFoundException;
@@ -59,5 +60,9 @@ public class CategoriaService {
 		PageRequest pageRequest = new PageRequest(page, linesPerPage, Direction.valueOf(direction),orderBy);
 		
 		return categoriaRepository.findAll(pageRequest);
+	}
+	
+	public Categoria fromDTO(CategoriaDTO categoriaDTO) {
+		return new Categoria(categoriaDTO.getId(),categoriaDTO.getNome());
 	}
 }

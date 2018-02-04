@@ -3,15 +3,18 @@ package com.ikytus.mc.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 public class Categoria extends AbstractEntity{
 	private static final long serialVersionUID = 1L;
 	
-	@Column(length = 100)
+	@NotEmpty(message = "Preenchimento obrigatório")
+	@Length(min=5, max=80, message="O tamanho deve ser entre 5 e 80 caracteres")
 	private String nome;
 		
 	@ManyToMany(mappedBy="categorias")
