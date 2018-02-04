@@ -1,6 +1,8 @@
 package com.ikytus.mc.resources;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ikytus.mc.domain.Categoria;
+import com.ikytus.mc.dto.CategoriaDTO;
 import com.ikytus.mc.service.CategoriaService;
+
+
 
 @RestController
 @RequestMapping(value="/categorias")
@@ -23,6 +28,13 @@ public class CategoriaResource {
 	
 	@Autowired
 	private CategoriaService categoriaService; 
+	
+	@GetMapping()
+	public ResponseEntity<List<CategoriaDTO>> findAll() {
+		List<Categoria> categorias = categoriaService.findAll();
+		List<CategoriaDTO> listDto = categorias.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
+		return ResponseEntity.ok().body(listDto);
+	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Categoria> find(@PathVariable Long id) {
