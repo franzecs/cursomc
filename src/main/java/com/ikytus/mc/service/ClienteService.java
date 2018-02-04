@@ -13,7 +13,7 @@ public class ClienteService {
 	@Autowired
 	private ClienteRepository clienteRepository;
 	
-	public Cliente buscar(Long id) {
+	public Cliente find(Long id) {
 		
 		Cliente cliente = clienteRepository.findOne(id); 
 		
