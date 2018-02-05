@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ikytus.mc.domain.Cliente;
 import com.ikytus.mc.dto.ClienteDTO;
+import com.ikytus.mc.dto.ClienteNewDTO;
 import com.ikytus.mc.service.ClienteService;
 
 @RestController
@@ -38,8 +39,8 @@ public class ClienteResource {
 	}
 	
 	@PostMapping()
-	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteDTO clienteDto) {
-		Cliente cliente = clienteService.fromDTO(clienteDto);
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto) {
+		Cliente cliente = clienteService.fromDTO(objDto);
 		cliente = clienteService.insert(cliente);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(cliente.getId()).toUri();

@@ -2,27 +2,41 @@ package com.ikytus.mc.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
+import org.springframework.util.StringUtils;
+
 @MappedSuperclass
-public class AbstractEntity implements Serializable {
+public class AbstractEntityImg implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-		
-	public AbstractEntity() {
-	}
 	
-	public AbstractEntity(Long id) {
+	@Column(length = 100)
+	private String nomeimg;
+	
+	@Lob
+	private String img;
+		
+	public AbstractEntityImg() {
+	}
+		
+	public AbstractEntityImg(Long id, String nomeimg, String img) {
 		super();
 		this.id = id;
+		this.nomeimg = nomeimg;
+		this.img = img;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -30,6 +44,26 @@ public class AbstractEntity implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getNomeimg() {
+		return nomeimg;
+	}
+
+	public void setNomeimg(String nomeimg) {
+		this.nomeimg = nomeimg;
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+	
+	public boolean temImagem(){
+		return !StringUtils.isEmpty(nomeimg);
 	}
 
 	@Override
@@ -48,7 +82,7 @@ public class AbstractEntity implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AbstractEntity other = (AbstractEntity) obj;
+		AbstractEntityImg other = (AbstractEntityImg) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
