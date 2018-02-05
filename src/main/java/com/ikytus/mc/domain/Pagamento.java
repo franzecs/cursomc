@@ -31,7 +31,7 @@ public abstract class Pagamento extends AbstractEntity{
 	public Pagamento(Long id, EstadoPagamento estadoPagamento, Pedido pedido) {
 		super();
 		super.setId(id);
-		this.estadoPagamento = estadoPagamento.getCod();
+		this.estadoPagamento = (estadoPagamento==null) ? null : estadoPagamento.getCod();
 		this.pedido = pedido;
 	}
 	
