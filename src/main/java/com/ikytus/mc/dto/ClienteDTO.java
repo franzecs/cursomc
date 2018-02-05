@@ -6,6 +6,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.ikytus.mc.domain.AbstractEntity;
 import com.ikytus.mc.domain.Cliente;
+import com.ikytus.mc.service.validation.ClienteInsert;
+
 
 public class ClienteDTO extends AbstractEntity{
 	private static final long serialVersionUID = 1L;
