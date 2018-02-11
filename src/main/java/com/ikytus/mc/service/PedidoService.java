@@ -9,6 +9,7 @@ import com.ikytus.mc.domain.ItemPedido;
 import com.ikytus.mc.domain.PagamentoComBoleto;
 import com.ikytus.mc.domain.Pedido;
 import com.ikytus.mc.domain.enums.EstadoPagamento;
+import com.ikytus.mc.repository.ClienteRepository;
 import com.ikytus.mc.repository.ItemPedidoRepository;
 import com.ikytus.mc.repository.PagamentoRepository;
 import com.ikytus.mc.repository.PedidoRepository;
@@ -33,6 +34,9 @@ public class PedidoService {
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
 	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
 	public Pedido find(Long id) {
 		
 		Pedido pedido = pedidoRepository.findOne(id); 
@@ -47,6 +51,7 @@ public class PedidoService {
 	public Pedido insert(Pedido pedido) {
 		pedido.setId(null);
 		pedido.setInstante(new Date());
+		pedido.setCliente(clienteRepository.findOne(pedido.getCliente().getId()));
 		pedido.getPagamento().setEstadoPagamento(EstadoPagamento.PENDENTE);
 		pedido.getPagamento().setPedido(pedido);
 		if(pedido.getPagamento() instanceof PagamentoComBoleto) {
@@ -58,12 +63,13 @@ public class PedidoService {
 		pagamentoRepository.save(pedido.getPagamento());
 		for(ItemPedido ip : pedido.getItens()) {
 			ip.setDesconto(0.0);
-			ip.setPreco(produtoRepository.findOne(ip.getProduto().getId()).getPreco());
+			ip.setProduto(produtoRepository.findOne(ip.getProduto().getId()));
+			ip.setPreco(ip.getProduto().getPreco());
 			ip.setPedido(pedido);
 		}
 		
 		itemPedidoRepository.save(pedido.getItens());
-		
+		System.out.println(pedido);
 		return pedido;
 	}
 }
