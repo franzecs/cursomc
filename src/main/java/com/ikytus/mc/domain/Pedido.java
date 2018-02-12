@@ -108,7 +108,7 @@ public class Pedido extends AbstractEntity{
 		builder.append(", Cliente: ");
 		builder.append(getCliente().getNome());
 		builder.append(", Situação do pagamento: ");
-		/*builder.append(getPagamento().getEstado().getDescricao());*/
+		builder.append(getPagamento().getEstadoPagamento().getDescricao());
 		builder.append("\nDetalhes:\n");
 		for (ItemPedido ip : getItens()) {
 			builder.append(ip.toString());
