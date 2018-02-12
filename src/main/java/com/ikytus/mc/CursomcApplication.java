@@ -15,4 +15,5 @@ public class CursomcApplication implements CommandLineRunner {
 	public void run(String... arg0) throws Exception {
 		
 	}
+	
 }
