@@ -13,7 +13,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import com.ikytus.mc.service.DBService;
 import com.ikytus.mc.service.EmailService;
-import com.ikytus.mc.service.SmtpEmailService;
+import com.ikytus.mc.util.email.JavaMailService;
 
 @Configuration
 @Profile("dev")
@@ -36,7 +36,7 @@ public class DevConfig {
 		return true;
 	}
 	
-	@Bean
+	@Bean(name = "javaMailSender")
 	public JavaMailSender getJavaMailSender() {
 	   
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -53,10 +53,9 @@ public class DevConfig {
 	     
 	    return mailSender;
 	}
-		
+  		
 	@Bean
 	public EmailService emailService() {
-		return new SmtpEmailService();
+		return new JavaMailService(getJavaMailSender());
 	}
-	
 }

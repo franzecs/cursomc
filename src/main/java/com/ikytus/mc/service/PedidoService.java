@@ -27,7 +27,7 @@ public class PedidoService {
 	
 	@Autowired
 	private EmailService emailService;
-	
+		
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
 	
@@ -74,7 +74,7 @@ public class PedidoService {
 		}
 		
 		itemPedidoRepository.save(pedido.getItens());
-		emailService.sendOrderConfirmationEmail(pedido);
+		emailService.sendOrderConfirmationHtmlEmail(pedido);
 		return pedido;
 	}
 }

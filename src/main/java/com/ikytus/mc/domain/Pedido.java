@@ -117,6 +117,4 @@ public class Pedido extends AbstractEntity{
 		builder.append(nf.format(getValorTotal()));
 		return builder.toString();
 	}
-	
-	
 }

@@ -1,5 +1,7 @@
 package com.ikytus.mc.service;
 
+import javax.mail.internet.MimeMessage;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,7 @@ public class SmtpEmailService extends AbstractEmailService {
 
 	@Autowired
 	private MailSender mailSender;
-	
+			 
 	private static final Logger LOG = LoggerFactory.getLogger(SmtpEmailService.class);
 	
 	@Override
@@ -18,6 +20,12 @@ public class SmtpEmailService extends AbstractEmailService {
 		LOG.info("Enviando Email...");
 		mailSender.send(msg);
 		LOG.info("Email enviado");
+	}
+
+	@Override
+	public void sendHtmlEmail(MimeMessage mimeMessage) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

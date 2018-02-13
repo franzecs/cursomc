@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -31,6 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		"/categorias/**"
 	};
 	
+	private static final String[] PUBLIC_MATCHES_POST = {
+			"/pedidos/**"
+		};
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
 		if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
@@ -40,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.cors().and().csrf().disable();
 		http.authorizeRequests()
 			.antMatchers(HttpMethod.GET, PUBLIC_MATCHES_GET).permitAll()
+			.antMatchers(HttpMethod.POST, PUBLIC_MATCHES_POST).permitAll()
 			.antMatchers(PUBLIC_MATCHES).permitAll()
 			.anyRequest().authenticated();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -50,5 +56,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
 		return source;
+	}
+	
+	@Bean
+	public BCryptPasswordEncoder bCrypyPasswordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 }
