@@ -15,6 +15,7 @@ import com.ikytus.mc.repository.PagamentoRepository;
 import com.ikytus.mc.repository.PedidoRepository;
 import com.ikytus.mc.repository.ProdutoRepository;
 import com.ikytus.mc.service.exceptions.ObjectNotFoundException;
+import com.ikytus.mc.util.email.EmailService;
 
 @Service
 public class PedidoService {

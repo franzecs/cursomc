@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import com.ikytus.mc.service.DBService;
-import com.ikytus.mc.service.EmailService;
+import com.ikytus.mc.util.email.DBService;
+import com.ikytus.mc.util.email.EmailService;
 import com.ikytus.mc.util.email.JavaMailService;
 
 @Configuration

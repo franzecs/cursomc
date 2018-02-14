@@ -126,7 +126,7 @@ public class Cliente extends AbstractEntity{
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-	
+			
 	public Set<Perfil> getPerfis(){
 		return  perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
 	}

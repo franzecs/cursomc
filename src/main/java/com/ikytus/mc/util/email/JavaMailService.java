@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import com.ikytus.mc.service.AbstractEmailService;
-
 public class JavaMailService extends AbstractEmailService{
 		
     private JavaMailSender javaMailSender;

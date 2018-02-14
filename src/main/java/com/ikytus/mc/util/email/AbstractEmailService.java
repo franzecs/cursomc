@@ -1,4 +1,4 @@
-package com.ikytus.mc.service;
+package com.ikytus.mc.util.email;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;

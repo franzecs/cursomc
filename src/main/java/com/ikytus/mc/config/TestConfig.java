@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.ikytus.mc.service.DBService;
-import com.ikytus.mc.service.EmailService;
-import com.ikytus.mc.service.MockEmailService;
+import com.ikytus.mc.util.email.DBService;
+import com.ikytus.mc.util.email.EmailService;
+import com.ikytus.mc.util.email.MockEmailService;
 
 @Configuration
 @Profile("test")
