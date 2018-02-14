@@ -13,14 +13,18 @@ import org.springframework.stereotype.Service;
 import com.ikytus.mc.domain.Cidade;
 import com.ikytus.mc.domain.Cliente;
 import com.ikytus.mc.domain.Endereco;
+import com.ikytus.mc.domain.enums.Perfil;
 import com.ikytus.mc.domain.enums.TipoCliente;
 import com.ikytus.mc.dto.ClienteDTO;
 import com.ikytus.mc.dto.ClienteNewDTO;
 import com.ikytus.mc.repository.CidadeRepository;
 import com.ikytus.mc.repository.ClienteRepository;
 import com.ikytus.mc.repository.EnderecoRepository;
+import com.ikytus.mc.service.exceptions.AutorizationException;
 import com.ikytus.mc.service.exceptions.DataIntegrityException;
 import com.ikytus.mc.service.exceptions.ObjectNotFoundException;
+import com.ikytus.mc.util.security.UserSS;
+import com.ikytus.mc.util.security.UserService;
 
 @Service
 public class ClienteService {
@@ -38,6 +42,11 @@ public class ClienteService {
 	private BCryptPasswordEncoder pe;
 		
 	public Cliente find(Long id) {
+		
+		UserSS user = UserService.authenticated();
+		if(user==null|| !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AutorizationException("Acesso negado");
+		}
 		
 		Cliente obj = objRepository.findOne(id); 
 		
