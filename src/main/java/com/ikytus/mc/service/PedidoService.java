@@ -3,8 +3,12 @@ package com.ikytus.mc.service;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.ikytus.mc.domain.Cliente;
 import com.ikytus.mc.domain.ItemPedido;
 import com.ikytus.mc.domain.PagamentoComBoleto;
 import com.ikytus.mc.domain.Pedido;
@@ -14,8 +18,11 @@ import com.ikytus.mc.repository.ItemPedidoRepository;
 import com.ikytus.mc.repository.PagamentoRepository;
 import com.ikytus.mc.repository.PedidoRepository;
 import com.ikytus.mc.repository.ProdutoRepository;
+import com.ikytus.mc.service.exceptions.AutorizationException;
 import com.ikytus.mc.service.exceptions.ObjectNotFoundException;
 import com.ikytus.mc.util.email.EmailService;
+import com.ikytus.mc.util.security.UserSS;
+import com.ikytus.mc.util.security.UserService;
 
 @Service
 public class PedidoService {
@@ -77,5 +84,16 @@ public class PedidoService {
 		itemPedidoRepository.save(pedido.getItens());
 		emailService.sendOrderConfirmationHtmlEmail(pedido);
 		return pedido;
+	}
+	
+	public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
+		UserSS user = UserService.authenticated();
+		if(user==null) {
+			throw new AutorizationException("Acesso negado");
+		}
+		PageRequest pageRequest = new PageRequest(page, linesPerPage, Direction.valueOf(direction),orderBy);
+		Cliente cliente = clienteRepository.findOne(user.getId());
+		
+		return pedidoRepository.findByCliente(cliente, pageRequest);
 	}
 }
