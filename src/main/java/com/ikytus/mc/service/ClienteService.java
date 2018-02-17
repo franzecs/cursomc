@@ -32,7 +32,7 @@ import com.ikytus.mc.util.security.UserService;
 public class ClienteService {
 	
 	@Autowired
-	private ClienteRepository objRepository;
+	private ClienteRepository clienteRepository;
 	
 	@Autowired
 	private CidadeRepository cidadeRepository;
@@ -53,7 +53,7 @@ public class ClienteService {
 			throw new AutorizationException("Acesso negado");
 		}
 		
-		Cliente obj = objRepository.findOne(id); 
+		Cliente obj = clienteRepository.findOne(id); 
 		
 		if(obj == null) {
 			throw new ObjectNotFoundException("Objeto não encontrado! Id: " + id
@@ -63,12 +63,12 @@ public class ClienteService {
 	}
 	
 	public List<Cliente> findAll(){
-		return (List<Cliente>) objRepository.findAll();
+		return (List<Cliente>) clienteRepository.findAll();
 	}
 	
 	public Cliente insert(Cliente obj) {
 		obj.setId(null);
-		obj = objRepository.save(obj);
+		obj = clienteRepository.save(obj);
 		enderecoRepository.save(obj.getEnderecos());
 		return obj;
 	}
@@ -76,13 +76,13 @@ public class ClienteService {
 	public Cliente update(Cliente obj) {
 		Cliente newCliente = find(obj.getId());
 		updateData(newCliente,obj);
-		return objRepository.save(newCliente);
+		return clienteRepository.save(newCliente);
 	}
 	
 	public void delete (Long id) {
 		find(id);
 		try {
-			objRepository.delete(id);
+			clienteRepository.delete(id);
 		}catch(DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir porque há pedidos relacionados");
 		}
@@ -91,7 +91,7 @@ public class ClienteService {
 	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
 		PageRequest pageRequest = new PageRequest(page, linesPerPage, Direction.valueOf(direction),orderBy);
 		
-		return objRepository.findAll(pageRequest);
+		return clienteRepository.findAll(pageRequest);
 	}
 	
 	public Cliente fromDTO(ClienteDTO objDTO) {
@@ -120,6 +120,18 @@ public class ClienteService {
 	}
 	
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
+		
+		UserSS user = UserService.authenticated();
+		if(user ==null) {
+			throw new AutorizationException("Acesso negado");
+		}
+		
+		URI uri = s3Service.uploadFile(multipartFile);
+		
+		Cliente cli = clienteRepository.findOne(user.getId());
+		cli.setImageUrl(uri.toString());
+		clienteRepository.save(cli);
+		
 		return s3Service.uploadFile(multipartFile);
 	}
 }
