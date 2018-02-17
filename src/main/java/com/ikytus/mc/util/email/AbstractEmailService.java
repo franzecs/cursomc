@@ -11,11 +11,11 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
-import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
+import com.ikytus.mc.domain.Cliente;
 import com.ikytus.mc.domain.ItemPedido;
 import com.ikytus.mc.domain.Pedido;
 
@@ -34,11 +34,30 @@ public abstract class AbstractEmailService implements EmailService{
 	}
 	
 	@Override
-	public void sendOrderConfirmationHtmlEmail(Pedido obj) {
-		MimeMessage mimeMessage = prepareHtmlMailMessageFromPedido(obj);
-		sendHtmlEmail(mimeMessage);
+	public void sendOrderConfirmationHtmlEmail(Pedido obj){
+		MimeMessage mimeMessage;
+		try {
+			mimeMessage = prepareHtmlMailMessageFromPedido(obj);
+			sendHtmlEmail(mimeMessage);
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-
+	
+	@Override
+	public void sendNewPasswordEmail(Cliente cliente, String newPass) {
+		MimeMessage mimeMessage;
+		try {
+			mimeMessage = prepareNewPasswordEmail(cliente, newPass);
+			sendHtmlEmail(mimeMessage);
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 	private SimpleMailMessage prepareSimpleMailMessageFromPedido(Pedido obj) {
 		SimpleMailMessage sm =  new SimpleMailMessage();
 		sm.setTo(obj.getCliente().getEmail());
@@ -50,14 +69,14 @@ public abstract class AbstractEmailService implements EmailService{
 	}
 	
 	@Profile("dev")
-	private MimeMessage prepareHtmlMailMessageFromPedido(Pedido message) {
+	private MimeMessage prepareHtmlMailMessageFromPedido(Pedido message) throws MessagingException {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper;
 		
 		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
-		try {
+		
 			helper = new MimeMessageHelper(mimeMessage, true);
 			helper.setFrom(sender);
 			helper.setTo(message.getCliente().getEmail());
@@ -81,12 +100,29 @@ public abstract class AbstractEmailService implements EmailService{
 				builder.append("</html>");
 
 			helper.setText(builder.toString(), true);
-						
-		} catch (MailException e) {
-			System.out.println("Email não pode ser eviado!\n" + e.getMessage());
-		} catch (MessagingException e) {
-			System.out.println("Email não pode ser eviado.\n" + e.getMessage());
-		}
+		
+		return mimeMessage;
+	}
+	
+	@Profile("dev")
+	private MimeMessage prepareNewPasswordEmail(Cliente cliente, String newPass) throws MessagingException {
+		
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper helper;
+	
+			helper = new MimeMessageHelper(mimeMessage, true);
+			helper.setFrom(sender);
+			helper.setTo(cliente.getEmail());
+			helper.setSubject("Solicitação de nova senha");
+			helper.setSentDate(new Date());
+			
+			StringBuilder builder = new StringBuilder();
+				builder.append("<html>");
+				builder.append("<body>");
+				builder.append("<h1>" + "Nova Senha: " + newPass + "</h1>");
+				builder.append("</body>");
+				builder.append("</html>");
+			helper.setText(builder.toString(), true);
 		return mimeMessage;
 	}
 	

@@ -17,6 +17,7 @@ public class SmtpEmailService extends AbstractEmailService {
 	
 	@Override
 	public void sendEmail(SimpleMailMessage msg) {
+		System.out.println("chegou no smtp");
 		LOG.info("Enviando Email...");
 		mailSender.send(msg);
 		LOG.info("Email enviado");

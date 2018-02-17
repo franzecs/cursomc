@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.ikytus.mc.domain.Categoria;
 import com.ikytus.mc.domain.Pedido;
-import com.ikytus.mc.dto.CategoriaDTO;
 import com.ikytus.mc.service.PedidoService;
 
 @RestController

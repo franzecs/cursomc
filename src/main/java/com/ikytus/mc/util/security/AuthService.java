@@ -31,12 +31,11 @@ public class AuthService {
 		if (cliente == null) {
 			throw new ObjectNotFoundException("Email não encontrado");
 		}
-		
+				
 		String newPass = newPassword();
 		cliente.setSenha(pe.encode(newPass));
-		
 		clienteRepository.save(cliente);
-		/*emailService.sendNewPasswordEmail(cliente, newPass);*/
+		emailService.sendNewPasswordEmail(cliente, newPass);
 	}
 
 	private String newPassword() {
