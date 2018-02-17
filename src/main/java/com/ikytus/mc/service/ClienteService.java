@@ -1,9 +1,11 @@
 package com.ikytus.mc.service;
 
+import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,7 +47,13 @@ public class ClienteService {
 	
 	@Autowired
 	private S3Service s3Service;
-		
+	
+	@Autowired
+	private ImageService imageService;
+	
+	@Value("${img.prefix.client.profile}")
+	private String prefixo;
+	
 	public Cliente find(Long id) {
 		
 		UserSS user = UserService.authenticated();
@@ -126,12 +134,9 @@ public class ClienteService {
 			throw new AutorizationException("Acesso negado");
 		}
 		
-		URI uri = s3Service.uploadFile(multipartFile);
+		BufferedImage jpgImage= imageService.getJpgImageFromFile(multipartFile);
+		String fileName = prefixo + user.getId() + ".jpg";
 		
-		Cliente cli = clienteRepository.findOne(user.getId());
-		cli.setImageUrl(uri.toString());
-		clienteRepository.save(cli);
-		
-		return s3Service.uploadFile(multipartFile);
+		return s3Service.uploadFile(imageService.getInputStream(jpgImage,"jpg"), fileName, "image");
 	}
 }
