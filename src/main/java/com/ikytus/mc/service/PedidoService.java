@@ -18,7 +18,7 @@ import com.ikytus.mc.repository.ItemPedidoRepository;
 import com.ikytus.mc.repository.PagamentoRepository;
 import com.ikytus.mc.repository.PedidoRepository;
 import com.ikytus.mc.repository.ProdutoRepository;
-import com.ikytus.mc.service.exceptions.AutorizationException;
+import com.ikytus.mc.service.exceptions.AuthorizationException;
 import com.ikytus.mc.service.exceptions.ObjectNotFoundException;
 import com.ikytus.mc.util.email.EmailService;
 import com.ikytus.mc.util.security.UserSS;
@@ -89,7 +89,7 @@ public class PedidoService {
 	public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
 		UserSS user = UserService.authenticated();
 		if(user==null) {
-			throw new AutorizationException("Acesso negado");
+			throw new AuthorizationException("Acesso negado");
 		}
 		PageRequest pageRequest = new PageRequest(page, linesPerPage, Direction.valueOf(direction),orderBy);
 		Cliente cliente = clienteRepository.findOne(user.getId());

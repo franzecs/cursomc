@@ -24,7 +24,7 @@ import com.ikytus.mc.dto.ClienteNewDTO;
 import com.ikytus.mc.repository.CidadeRepository;
 import com.ikytus.mc.repository.ClienteRepository;
 import com.ikytus.mc.repository.EnderecoRepository;
-import com.ikytus.mc.service.exceptions.AutorizationException;
+import com.ikytus.mc.service.exceptions.AuthorizationException;
 import com.ikytus.mc.service.exceptions.DataIntegrityException;
 import com.ikytus.mc.service.exceptions.ObjectNotFoundException;
 import com.ikytus.mc.util.security.UserSS;
@@ -60,7 +60,7 @@ public class ClienteService {
 		
 		UserSS user = UserService.authenticated();
 		if(user==null|| !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
-			throw new AutorizationException("Acesso negado");
+			throw new AuthorizationException("Acesso negado");
 		}
 		
 		Cliente obj = clienteRepository.findOne(id); 
@@ -80,7 +80,7 @@ public class ClienteService {
 		
 		UserSS user = UserService.authenticated();
 		if(user==null|| !user.hasRole(Perfil.ADMIN) && !email.equals(user.getUsername())) {
-			throw new AutorizationException("Acesso negado");
+			throw new AuthorizationException("Acesso negado");
 		}
 		
 		Cliente cliente = clienteRepository.findOne(user.getId());
@@ -148,7 +148,7 @@ public class ClienteService {
 		
 		UserSS user = UserService.authenticated();
 		if(user ==null) {
-			throw new AutorizationException("Acesso negado");
+			throw new AuthorizationException("Acesso negado");
 		}
 		
 		BufferedImage jpgImage= imageService.getJpgImageFromFile(multipartFile);
