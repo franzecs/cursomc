@@ -24,17 +24,20 @@ import com.ikytus.mc.dto.ClienteNewDTO;
 import com.ikytus.mc.repository.CidadeRepository;
 import com.ikytus.mc.repository.ClienteRepository;
 import com.ikytus.mc.repository.EnderecoRepository;
+import com.ikytus.mc.util.security.UserSS;
+import com.ikytus.mc.util.security.UserService;
 import com.ikytus.mc.service.exceptions.AuthorizationException;
 import com.ikytus.mc.service.exceptions.DataIntegrityException;
 import com.ikytus.mc.service.exceptions.ObjectNotFoundException;
-import com.ikytus.mc.util.security.UserSS;
-import com.ikytus.mc.util.security.UserService;
 
 @Service
 public class ClienteService {
 	
 	@Autowired
-	private ClienteRepository clienteRepository;
+	private BCryptPasswordEncoder pe;
+	
+	@Autowired
+	private ClienteRepository repo;
 	
 	@Autowired
 	private CidadeRepository cidadeRepository;
@@ -43,120 +46,118 @@ public class ClienteService {
 	private EnderecoRepository enderecoRepository;
 	
 	@Autowired
-	private BCryptPasswordEncoder pe;
-	
-	@Autowired
 	private S3Service s3Service;
 	
 	@Autowired
 	private ImageService imageService;
 	
 	@Value("${img.prefix.client.profile}")
-	private String prefixo;
+	private String prefix;
+
 	@Value("${img.profile.size}")
 	private Integer size;
 	
 	public Cliente find(Long id) {
 		
 		UserSS user = UserService.authenticated();
-		if(user==null|| !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+		if (user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Acesso negado");
 		}
 		
-		Cliente obj = clienteRepository.findOne(id); 
-		
-		if(obj == null) {
+		Cliente obj = repo.findOne(id);
+		if (obj == null) {
 			throw new ObjectNotFoundException("Objeto não encontrado! Id: " + id
 					+ ", Tipo: " + Cliente.class.getName());
 		}
-		return obj; 
+		return obj;
 	}
-	
-	public List<Cliente> findAll(){
-		return (List<Cliente>) clienteRepository.findAll();
-	}
-	
-	public Cliente findByEmail(String email) {
-		
-		UserSS user = UserService.authenticated();
-		if(user==null|| !user.hasRole(Perfil.ADMIN) && !email.equals(user.getUsername())) {
-			throw new AuthorizationException("Acesso negado");
-		}
-		
-		Cliente cliente = clienteRepository.findOne(user.getId());
-		if(cliente==null) {
-			throw new ObjectNotFoundException("Objeto não encontrado! Id: " + user.getId() + ", Tipo: " + Cliente.class.getName());
-		}
-		
-		return cliente;
-	}
-	
+
 	public Cliente insert(Cliente obj) {
 		obj.setId(null);
-		obj = clienteRepository.save(obj);
+		obj = repo.save(obj);
 		enderecoRepository.save(obj.getEnderecos());
 		return obj;
 	}
 	
 	public Cliente update(Cliente obj) {
-		Cliente newCliente = find(obj.getId());
-		updateData(newCliente,obj);
-		return clienteRepository.save(newCliente);
+		Cliente newObj = find(obj.getId());
+		updateData(newObj, obj);
+		return repo.save(newObj);
 	}
-	
-	public void delete (Long id) {
+
+	public void delete(Long id) {
 		find(id);
 		try {
-			clienteRepository.delete(id);
-		}catch(DataIntegrityViolationException e) {
+			repo.delete(id);
+		}
+		catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir porque há pedidos relacionados");
 		}
 	}
 	
-	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
-		PageRequest pageRequest = new PageRequest(page, linesPerPage, Direction.valueOf(direction),orderBy);
+	public List<Cliente> findAll() {
+		return (List<Cliente>) repo.findAll();
+	}
+	
+	public Cliente findByEmail(String email) {
 		
-		return clienteRepository.findAll(pageRequest);
+		UserSS user = UserService.authenticated();
+		if (user==null || !user.hasRole(Perfil.ADMIN) && !email.equals(user.getUsername())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
+		Cliente obj = repo.findOne(user.getId());
+		if (obj == null) {
+			throw new ObjectNotFoundException("Objeto não encontrado! Id: " + user.getId()
+					+ ", Tipo: " + Cliente.class.getName());
+		}
+		return obj;
 	}
 	
-	public Cliente fromDTO(ClienteDTO objDTO) {
-		return new Cliente(objDTO.getId(),objDTO.getNome(),objDTO.getEmail(),null,null,null);
+	
+	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		PageRequest pageRequest = new PageRequest(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		return repo.findAll(pageRequest);
 	}
 	
+	public Cliente fromDTO(ClienteDTO objDto) {
+		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null, null);
+	}
+
 	public Cliente fromDTO(ClienteNewDTO objDto) {
-		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(), TipoCliente.toEnum(objDto.getTipo()),pe.encode(objDto.getSenha()));
+		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(), TipoCliente.toEnum(objDto.getTipo()), pe.encode(objDto.getSenha()));
 		Cidade cid = cidadeRepository.findOne(objDto.getCidade_id());
-		Endereco end =new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), objDto.getBairro(), objDto.getCep(), cli, cid);
-		
+		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), objDto.getBairro(), objDto.getCep(), cli, cid);
 		cli.getEnderecos().add(end);
 		cli.getTelefones().add(objDto.getTelefone1());
-		if(objDto.getTelefone2()!=null) {
+		if (objDto.getTelefone2()!=null) {
 			cli.getTelefones().add(objDto.getTelefone2());
 		}
-		if(objDto.getTelefone3()!=null) {
+		if (objDto.getTelefone3()!=null) {
 			cli.getTelefones().add(objDto.getTelefone3());
 		}
 		return cli;
 	}
+
 	
-	private void updateData(Cliente newCliente, Cliente obj) {
-		newCliente.setNome(obj.getNome());
-		newCliente.setEmail(obj.getEmail());
+	private void updateData(Cliente newObj, Cliente obj) {
+		newObj.setNome(obj.getNome());
+		newObj.setEmail(obj.getEmail());
 	}
 	
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
 		
 		UserSS user = UserService.authenticated();
-		if(user ==null) {
+		if (user == null) {
 			throw new AuthorizationException("Acesso negado");
 		}
 		
-		BufferedImage jpgImage= imageService.getJpgImageFromFile(multipartFile);
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
 		jpgImage = imageService.cropSquare(jpgImage);
 		jpgImage = imageService.resize(jpgImage, size);
 		
-		String fileName = prefixo + user.getId() + ".jpg";
-		
-		return s3Service.uploadFile(imageService.getInputStream(jpgImage,"jpg"), fileName, "image");
+		String fileName = prefix + user.getId() + ".jpg";
+
+		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
 	}
 }

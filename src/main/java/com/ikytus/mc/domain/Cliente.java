@@ -90,6 +90,10 @@ public class Cliente extends AbstractEntity{
 	public TipoCliente getTipo() {
 		return TipoCliente.toEnum(tipo);
 	}
+	
+	public void setTipo(TipoCliente tipo) {
+		this.tipo = tipo.getCod();
+	}
 
 	public List<Endereco> getEnderecos() {
 		return enderecos;
@@ -114,11 +118,7 @@ public class Cliente extends AbstractEntity{
 	public void setPedidos(List<Pedido> pedidos) {
 		this.pedidos = pedidos;
 	}
-
-	public void setTipo(Integer tipo) {
-		this.tipo = tipo;
-	}
-
+	
 	public String getSenha() {
 		return senha;
 	}
